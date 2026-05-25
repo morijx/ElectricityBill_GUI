@@ -56,12 +56,12 @@ class BillingResult:
                    recipient_address: Optional[str] = None) -> Invoice:
         """Convert billing result to invoice."""
         apt = next(
-            (a for a in project.property.apartments if a.id == self.apartment_id),
+            (a for a in project.property_info.apartments if a.id == self.apartment_id),
             None
         )
         
         invoice = Invoice(
-            property_id=project.property.id,
+            property_id=project.property_info.id,
             apartment_id=self.apartment_id,
             billing_period_id=self.period.id,
             period_start=self.period.start_date,
@@ -213,7 +213,7 @@ class BillingEngine:
         """
         results = {}
         
-        for apartment in self.project.property.apartments:
+        for apartment in self.project.property_info.apartments:
             result = self.calculate_apartment_bill(apartment, energy_flows, period)
             results[apartment.id] = result
         
@@ -233,7 +233,7 @@ class BillingEngine:
         
         for apt_id, result in results.items():
             apartment = next(
-                (a for a in self.project.property.apartments if a.id == apt_id),
+                (a for a in self.project.property_info.apartments if a.id == apt_id),
                 None
             )
             
@@ -264,23 +264,23 @@ class BillingEngine:
         
         if total_apartment_consumption <= 0:
             # Equal split if no consumption data
-            n_apartments = len(self.project.property.apartments)
+            n_apartments = len(self.project.property_info.apartments)
             if n_apartments > 0:
                 equal_share = shared_consumption_kwh / n_apartments
-                for apt in self.project.property.apartments:
+                for apt in self.project.property_info.apartments:
                     allocations[apt.id] = equal_share
             return allocations
         
         if allocation_mode == "proportional":
             # Proportional to consumption
-            for apt in self.project.property.apartments:
+            for apt in self.project.property_info.apartments:
                 # Will be filled in when actual consumption is known
                 allocations[apt.id] = 0.0
         elif allocation_mode == "equal":
             # Equal split
-            n_apartments = len(self.project.property.apartments)
+            n_apartments = len(self.project.property_info.apartments)
             equal_share = shared_consumption_kwh / n_apartments
-            for apt in self.project.property.apartments:
+            for apt in self.project.property_info.apartments:
                 allocations[apt.id] = equal_share
         elif allocation_mode == "fixed":
             # Fixed percentages from config

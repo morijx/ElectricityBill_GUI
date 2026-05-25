@@ -44,13 +44,13 @@ class ExportService:
         """
         pdf_paths = []
         
-        property_name = self.project.property.name if self.project.property else ""
+        property_name = self.project.property_info.name if self.project.property else ""
         property_address = ""
-        if self.project.property:
+        if self.project.property_info:
             parts = filter(None, [
-                self.project.property.address,
-                self.project.property.zip_code,
-                self.project.property.city,
+                self.project.property_info.address,
+                self.project.property_info.zip_code,
+                self.project.property_info.city,
             ])
             property_address = " ".join(parts)
         
@@ -78,7 +78,7 @@ class ExportService:
             Path to generated PDF, or None if failed
         """
         try:
-            property_name = self.project.property.name if self.project.property else ""
+            property_name = self.project.property_info.name if self.project.property else ""
             return self.pdf_generator.generate_summary_report(invoices, property_name)
         except Exception as e:
             print(f"Error generating summary report: {e}")
