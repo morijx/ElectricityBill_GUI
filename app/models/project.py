@@ -76,7 +76,7 @@ class Project:
     last_modified: date = field(default_factory=lambda: date.today())
     
     # Property information
-    property: Optional[Property] = None
+    property_info: Optional[Property] = None
     
     # Energy systems
     solar_system: Optional[SolarSystem] = None
@@ -101,8 +101,8 @@ class Project:
     
     def __post_init__(self) -> None:
         """Initialize default values if not provided."""
-        if self.property is None:
-            self.property = Property()
+        if self.property_info is None:
+            self.property_info = Property()
         if self.tariff is None:
             self.tariff = SwissTariff()
             self.tariff.create_default_components()
@@ -127,13 +127,13 @@ class Project:
     @property
     def apartment_count(self) -> int:
         """Get number of apartments."""
-        if self.property is None:
+        if self.property_info is None:
             return 0
-        return len(self.property.apartments)
+        return len(self.property_info.apartments)
     
     def get_owner_apartment_id(self) -> Optional[str]:
         """Get the owner apartment ID."""
-        if self.property is None:
+        if self.property_info is None:
             return None
-        owner_apt = self.property.get_owner_apartment()
+        owner_apt = self.property_info.get_owner_apartment()
         return owner_apt.id if owner_apt else None
