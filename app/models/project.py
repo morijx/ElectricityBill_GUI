@@ -108,8 +108,8 @@ class Project:
     
     def update_modified_date(self) -> None:
         """Update the last modified date."""
-        from datetime import date
-        self.last_modified = date.today()
+        from datetime import date as dt
+        self.last_modified = dt.today()
     
     @property
     def has_solar(self) -> bool:

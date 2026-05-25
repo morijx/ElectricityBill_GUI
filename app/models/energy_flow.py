@@ -38,7 +38,7 @@ class EnergyData:
     """Raw energy data point for a single interval."""
     
     timestamp: datetime
-    interval: TimeInterval = field(default_factory=lambda: None)  # type: ignore
+    interval: Optional[TimeInterval] = None
     
     # Energy values in kWh for the interval
     grid_import: float = 0.0
@@ -83,8 +83,8 @@ class EnergyFlow:
     """Processed energy flow for allocation calculations."""
     
     id: str = field(default_factory=lambda: str(uuid4()))
-    timestamp: datetime
-    interval: TimeInterval = field(default_factory=lambda: None)  # type: ignore
+    interval: Optional[TimeInterval] = None
+    timestamp: datetime = field(default_factory=datetime.now)
     
     # Source energy
     solar_available: float = 0.0  # Total solar production
