@@ -28,9 +28,9 @@ def check_dependencies() -> bool:
     missing = []
     
     try:
-        import pyside6
+        import PySide6
     except ImportError:
-        missing.append('pyside6')
+        missing.append('PySide6')
     
     try:
         import pandas

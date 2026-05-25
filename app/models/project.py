@@ -86,7 +86,7 @@ class Project:
     tariff: Optional[SwissTariff] = None
     
     # Allocation configuration
-    allocation_config: AllocationConfig = field(default_factory=AllocationConfig)
+    allocation_config: Optional[AllocationConfig] = None
     
     # Billing periods available
     billing_periods: list[str] = field(default_factory=list)
@@ -100,11 +100,14 @@ class Project:
     timezone: str = "Europe/Zurich"
     
     def __post_init__(self) -> None:
+        """Initialize default values if not provided."""
         if self.property is None:
             self.property = Property()
         if self.tariff is None:
             self.tariff = SwissTariff()
             self.tariff.create_default_components()
+        if self.allocation_config is None:
+            self.allocation_config = AllocationConfig()
     
     def update_modified_date(self) -> None:
         """Update the last modified date."""
@@ -126,7 +129,7 @@ class Project:
         """Get number of apartments."""
         if self.property is None:
             return 0
-        return self.property.apartment_count
+        return len(self.property.apartments)
     
     def get_owner_apartment_id(self) -> Optional[str]:
         """Get the owner apartment ID."""
