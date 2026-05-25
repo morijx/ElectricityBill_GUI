@@ -57,8 +57,8 @@ def check_dependencies() -> bool:
 
 def run_gui():
     """Run the GUI application."""
-    from PySide6.QtWidgets import QApplication
-    from PySide6.QtCore import Qt
+    from PyQt6.QtWidgets import QApplication
+    from PyQt6.QtCore import Qt
     from app.gui_consolidated import run_gui as consolidated_run_gui
     
     return consolidated_run_gui()

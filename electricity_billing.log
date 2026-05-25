@@ -1,2 +1,7 @@
 2026-05-25 16:42:24,745 - __main__ - INFO - Starting Electricity Billing System
 2026-05-25 16:42:37,782 - __main__ - INFO - Starting Electricity Billing System
+2026-05-25 18:15:08,320 - __main__ - INFO - Starting Electricity Billing System
+2026-05-25 18:15:09,101 - __main__ - ERROR - Missing dependencies: PySide6, reportlab
+2026-05-25 18:15:09,101 - __main__ - ERROR - Please install them using: pip install -r requirements.txt
+2026-05-25 18:16:24,595 - __main__ - INFO - Starting Electricity Billing System
+2026-05-25 18:16:41,580 - __main__ - INFO - Starting Electricity Billing System
