@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 """
-Electricity Billing System - Main Entry Point
+Electricity Billing System - Main Entry Point (Consolidated Version)
 
-A modular Python desktop application for generating electricity bills
+A streamlined Python desktop application for generating electricity bills
 for multi-unit properties with solar energy systems, batteries, and
 flexible energy-sharing logic.
+
+This version uses consolidated modules for simpler structure:
+- app/models_consolidated.py: All data models
+- app/services_consolidated.py: All services (import, allocation, billing, PDF, DB)
+- app/gui_consolidated.py: Complete GUI application
 """
 
 import sys
@@ -42,21 +47,6 @@ def check_dependencies() -> bool:
     except ImportError:
         missing.append('reportlab')
     
-    try:
-        import matplotlib
-    except ImportError:
-        missing.append('matplotlib')
-    
-    try:
-        import pydantic
-    except ImportError:
-        missing.append('pydantic')
-    
-    try:
-        import sqlalchemy
-    except ImportError:
-        missing.append('sqlalchemy')
-    
     if missing:
         logger.error(f"Missing dependencies: {', '.join(missing)}")
         logger.error("Please install them using: pip install -r requirements.txt")
@@ -69,39 +59,19 @@ def run_gui():
     """Run the GUI application."""
     from PySide6.QtWidgets import QApplication
     from PySide6.QtCore import Qt
-    from app.gui.main_window import MainWindow
+    from app.gui_consolidated import run_gui as consolidated_run_gui
     
-    # Enable high DPI scaling
-    QApplication.setHighDpiScaleFactorRoundingPolicy(
-        Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
-    )
-    
-    app = QApplication(sys.argv)
-    app.setApplicationName("Electricity Billing System")
-    app.setOrganizationName("EnergyBill")
-    
-    # Set application style
-    app.setStyle("Fusion")
-    
-    # Create and show main window
-    window = MainWindow()
-    window.show()
-    
-    logger.info("Application started successfully")
-    
-    return app.exec()
+    return consolidated_run_gui()
 
 
 def run_cli_demo():
     """Run a CLI demonstration of the core functionality."""
     from datetime import date, timedelta
-    from app.models.property import Property, Apartment, Meter, MeterType
-    from app.models.tariff import SwissTariff
-    from app.models.project import Project, AllocationConfig, AllocationStrategy
-    from app.models.billing import BillingPeriod
-    from app.allocation.priority import PriorityAllocationStrategy
-    from app.billing.engine import BillingEngine
-    from app.models.energy_flow import EnergyFlow, TimeInterval
+    from app.models_consolidated import (
+        Property, Apartment, SwissTariff, Project, 
+        AllocationConfig, AllocationStrategyType, BillingPeriod
+    )
+    from app.services_consolidated import AllocationEngine, BillingEngine
     
     print("=" * 60)
     print("Electricity Billing System - Demo")
