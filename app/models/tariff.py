@@ -1,6 +1,7 @@
 """Tariff models for Swiss electricity billing."""
 
 from __future__ import annotations
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import time
 from enum import Enum
@@ -21,7 +22,7 @@ class TariffType(Enum):
     VAT = "vat"  # Value added tax
     RENEWABLE = "renewable"  # Renewable energy fee (KEV/PR)
     METERING = "metering"  # Metering fee
-    CONcession = "concession"  # Concession fees
+    CONCESSION = "concession"  # Concession fees
 
 
 class TimeOfUsePeriod(Enum):
@@ -30,6 +31,26 @@ class TimeOfUsePeriod(Enum):
     OFF_PEAK = "off_peak"
     NIGHT = "night"
     WEEKEND = "weekend"
+
+
+@dataclass
+class Tariff(ABC):
+    """Abstract base class for all tariff types."""
+    
+    id: str = field(default_factory=lambda: str(uuid4()))
+    name: str = "Tariff"
+    year: int = 2024
+    currency: str = "CHF"
+    
+    @abstractmethod
+    def calculate_cost(self, consumption_kwh: float, **kwargs) -> float:
+        """Calculate cost for given consumption."""
+        pass
+    
+    @abstractmethod
+    def get_components(self) -> list:
+        """Get all tariff components."""
+        pass
 
 
 @dataclass
@@ -102,7 +123,7 @@ class TariffComponent:
 
 
 @dataclass
-class SwissTariff:
+class SwissTariff(Tariff):
     """Swiss electricity tariff configuration."""
     
     id: str = field(default_factory=lambda: str(uuid4()))
@@ -202,6 +223,20 @@ class SwissTariff:
                 is_percentage=True,
             ),
         ]
+    
+    def calculate_cost(self, consumption_kwh: float, **kwargs) -> float:
+        """Calculate cost for given consumption."""
+        total = 0.0
+        for comp in self.components:
+            hour = kwargs.get('hour')
+            minute = kwargs.get('minute')
+            weekday = kwargs.get('weekday')
+            total += comp.calculate_cost(consumption_kwh, hour, minute, weekday)
+        return total
+    
+    def get_components(self) -> list:
+        """Get all tariff components."""
+        return self.components
     
     @property
     def total_energy_price(self) -> float:
